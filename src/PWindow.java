@@ -9,20 +9,22 @@ import java.sql.SQLException;
 
 public class PWindow extends JDialog {
 
+    private JFrame frame;
     private JList<String> list;
     private DefaultListModel<String> listModel;
     private JButton btnAddPw;
-    private JScrollPane leftSide;
-    private JPanel rightSide;
+    private JScrollPane leftSide; //contains list of pw's
+    private JPanel rightSide; //contains selected password details
     private PreparedStatement stmt = null;
     private ResultSet result = null;
+
+    private Connection connection;
     private int id;
 
-    public PWindow(JFrame frame, int id, Connection connection) {
-        init(frame, id);
+    JSplitPane split;
 
-        //create split
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSide, rightSide);
+    public PWindow(JFrame frame, int id, Connection connection) {
+        init(frame, id, connection);
 
         //create list selection
         list.addListSelectionListener(e -> {
@@ -48,12 +50,51 @@ public class PWindow extends JDialog {
 
 
         //add Password
-
-        frame.add(split, BorderLayout.CENTER);
-        frame.setVisible(true);
+        this.frame.add(this.split, BorderLayout.CENTER);
+        this.frame.setVisible(true);
     }
 
-    public void init_defaultPanel() {
+    public JFrame init(JFrame frame, int id, Connection connection) {
+        //general prep
+        this.id = id;
+        this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JPanel(), new JPanel());
+        this.rightSide = new JPanel();
+        this.frame = frame;
+        this.connection = connection;
+        init_rightSide();
+        init_frame();
+
+        //create left side
+        this.listModel = new DefaultListModel<>();
+        this.list = new JList<>(listModel);
+        btnAddPw = new JButton("+");
+        JPanel arg = new JPanel(new BorderLayout()); //puts list on top of "add new pw"-Button
+        arg.add(new JScrollPane(list), BorderLayout.CENTER);
+        arg.add(btnAddPw, BorderLayout.SOUTH);
+        btnAddPw.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                split.setRightComponent(rightSide);
+            }
+        });
+        leftSide = new JScrollPane(arg); //inits left side with list and "add new pw"-Button
+        split.setLeftComponent(leftSide);
+
+        frame.add(split);
+
+
+        return this.frame;
+    }
+
+    public void init_frame()  {
+        this.frame.setTitle("pwm");
+        this.frame.getContentPane().setBackground(new Color(41, 41,41));
+        this.frame.getContentPane().setForeground(new Color(41, 41,41));
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setSize(450, 450);
+    }
+
+    public void init_rightSide() {
         JLabel pName = new JLabel("Name");
         JLabel pEmail = new JLabel("E-Mail or Username");
         JLabel pPassword = new JLabel("Password");
@@ -86,41 +127,13 @@ public class PWindow extends JDialog {
         rightSide.add(tfExtra);
         rightSide.add(savePassword);
 
-    }
-
-    public JFrame init(JFrame frame, int id) {
-        //general prep
-        this.id = id;
-        rightSide = new JPanel();
-        init_defaultPanel();
-
-
-        //prep for left side
-        listModel = new DefaultListModel<>();
-        list = new JList<>(listModel);
-        btnAddPw = new JButton("+");
-
-        //create left side
-        JPanel arg = new JPanel(new BorderLayout());
-        arg.add(new JScrollPane(list), BorderLayout.CENTER);
-        arg.add(btnAddPw, BorderLayout.SOUTH);
-        btnAddPw.addActionListener( new ActionListener() {
+        savePassword.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
+                String query = "INSERT INTO user_data () VALUES (?,?,?)";
             }
         });
-        leftSide = new JScrollPane(arg);
 
-        //set main frame
-        frame.setTitle("pwm");
-        frame.getContentPane().setBackground(new Color(41, 41,41));
-        frame.getContentPane().setForeground(new Color(41, 41,41));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(450, 450);
-
-        return frame;
     }
 
 }
