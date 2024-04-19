@@ -137,6 +137,14 @@ public class PWindow extends JDialog {
                     stmt.setString(2, tfEmail.getText());
                     stmt.setString(3, tfPassword.getText());
                     stmt.setString(4, tfExtra.getText());
+
+                    //execute query
+                    int inserted = stmt.executeUpdate();
+                    if (inserted > 0) {
+                        System.out.println("success!");
+                    } else {
+                        System.out.println("fail!");
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
