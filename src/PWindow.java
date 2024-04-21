@@ -130,6 +130,9 @@ public class PWindow extends JDialog {
         savePassword.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //get all
+
+
                 try {
                     String query = "INSERT INTO user_data (name, email, password, extra) VALUES (?,?,?,?)";
                     stmt = connection.prepareStatement(query);
