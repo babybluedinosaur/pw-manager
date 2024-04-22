@@ -90,6 +90,8 @@ public class PWindow extends JDialog {
         this.frame.setTitle("pwm");
         this.frame.getContentPane().setBackground(new Color(41, 41,41));
         this.frame.getContentPane().setForeground(new Color(41, 41,41));
+        this.frame.setBackground(new Color(41, 41,41));
+        this.frame.setForeground(new Color(41, 41,41));
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(450, 450);
     }
@@ -105,16 +107,23 @@ public class PWindow extends JDialog {
         JPasswordField tfPassword = new JPasswordField(250);
         JTextField tfExtra = new JTextField(250);
 
+        rightSide.setBackground(new Color(41, 41, 41));
         pName.setBackground(new Color(160, 161, 165));
         pName.setForeground(new Color(160, 161, 165));
         pEmail.setBackground(new Color(160, 161, 165));
         pEmail.setForeground(new Color(160, 161, 165));
         pPassword.setBackground(new Color(160, 161, 165));
         pPassword.setForeground(new Color(160, 161, 165));
+        pExtra.setBackground(new Color(160, 161, 165));
+        pExtra.setForeground(new Color(160, 161, 165));
+        tfName.setBackground(new Color(160, 161, 165));
+        tfName.setForeground(new Color(41, 41, 41));
         tfEmail.setBackground(new Color(160, 161, 165));
         tfEmail.setForeground(new Color(41, 41, 41));
         tfPassword.setBackground(new Color(160, 161, 165));
         tfPassword.setForeground(new Color(41, 41, 41));
+        tfExtra.setBackground(new Color(160, 161, 165));
+        tfExtra.setForeground(new Color(41, 41, 41));
 
         rightSide.setLayout(new GridLayout(9, 1));
         rightSide.add(pName);
