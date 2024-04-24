@@ -18,7 +18,6 @@ public class PWindow extends JDialog {
     private ResultSet result = null;
     private Connection connection;
     private int id;
-
     JSplitPane split;
 
     public PWindow(JFrame frame, int id, Connection connection) {
@@ -69,7 +68,7 @@ public class PWindow extends JDialog {
         btnAddPw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Password newPw = new Password(null, null, null, null);
+                Password newPw = new Password(null, null, null, null,-1, connection);
                 split.setRightComponent(newPw.pwPanel);
             }
         });
