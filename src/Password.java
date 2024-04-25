@@ -19,7 +19,9 @@ public class Password extends JDialog{
     private JPasswordField tfPassword;
     private JTextField tfExtra;
     
-    private int id;
+    private int pw_id;
+
+    private int user_id;
     private Connection connection;
 
     private PreparedStatement stmt = null;
@@ -29,7 +31,7 @@ public class Password extends JDialog{
 
 
     //read password from db
-    public Password(String name, String email, String password, String extra, int id, Connection connection) {
+    public Password(String name, String email, String password, String extra, int pw_id, int user_id, Connection connection) {
         pName = new JLabel("Name");
         pEmail = new JLabel("E-Mail or Username");
         pPassword = new JLabel("Password");
@@ -39,7 +41,8 @@ public class Password extends JDialog{
         tfEmail = new JTextField(100);
         tfPassword = new JPasswordField(250);
         tfExtra = new JTextField(250);
-        this.id = id;
+        this.pw_id = pw_id;
+        this.user_id = user_id;
         this.connection = connection;
         if (name != null) tfName.setText(name);
         if (email != null) tfEmail.setText(email);
@@ -73,21 +76,62 @@ public class Password extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO
-                if (id > 0) { //update
+                if (pw_id > 0) { //update
                     //first update
-                    //then clear local passwords and load them again from db
-                } else { //create
-                    //save new password (push to db and save it locally in datastructure)
-                    String query = "INSERT INTO user_data (name, email, password, extra) VALUES (?,?,?,?)";
+                    String query = "UPDATE user_data SET name=?, email=?, password=?, extra=? WHERE id=?";
                     try {
                         stmt = connection.prepareStatement(query);
                         stmt.setString(1, tfName.getText());
                         stmt.setString(2, tfEmail.getText());
                         stmt.setString(3, tfPassword.getText());
                         stmt.setString(4, tfExtra.getText());
+                        stmt.setInt(5, pw_id);
 
-                        result = stmt.executeQuery();
-                        if (!result.next()) {
+                        int bruh = stmt.executeUpdate();
+                        if (bruh == 0) {
+                            System.out.println("bruh");
+                        } else {
+                            System.out.println("success!");
+                        }
+
+                    } catch (SQLException ex){
+                        throw new RuntimeException(ex);
+                    } finally {
+                        if (result != null) {
+                            try {
+
+                                result.close();
+
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+
+                        if (stmt != null) {
+                            try {
+
+                                stmt.close();
+
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+
+                    //then clear local passwords and load them again from db
+                } else { //create
+                    //save new password (push to db and save it locally in datastructure)
+                    String query = "INSERT INTO user_data (user_id, name, email, password, extra) VALUES (?,?,?,?,?)";
+                    try {
+                        stmt = connection.prepareStatement(query);
+                        stmt.setInt(1, user_id);
+                        stmt.setString(2, tfName.getText());
+                        stmt.setString(3, tfEmail.getText());
+                        stmt.setString(4, tfPassword.getText());
+                        stmt.setString(5, tfExtra.getText());
+
+                        int bruh = stmt.executeUpdate();
+                        if (bruh == 0) {
                             System.out.println("bruh");
                         } else {
                             System.out.println("success!");

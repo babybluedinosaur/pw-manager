@@ -41,6 +41,17 @@ public class PWindow extends JDialog {
 
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
+            } finally {
+                if (connection != null) {
+
+                    try {
+
+                        connection.close();
+
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             }
         });
 
@@ -68,7 +79,7 @@ public class PWindow extends JDialog {
         btnAddPw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Password newPw = new Password(null, null, null, null,-1, connection);
+                Password newPw = new Password(null, null, null, null,-1, id, connection);
                 split.setRightComponent(newPw.pwPanel);
             }
         });

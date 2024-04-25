@@ -94,7 +94,7 @@ public class Login extends JDialog{
                         }
                     }
 
-                    if (connection != null) {
+                    /*if (connection != null) {
 
                         try {
 
@@ -103,7 +103,7 @@ public class Login extends JDialog{
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                    }
+                    }*/
                 }
             }
         });
