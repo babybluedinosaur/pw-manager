@@ -31,7 +31,8 @@ public class Password extends JDialog{
 
 
     //read password from db
-    public Password(String name, String email, String password, String extra, int pw_id, int user_id, Connection connection) {
+    public Password(String name, String email, String password, String extra, int pw_id, int user_id,
+                    Connection connection) {
         pName = new JLabel("Name");
         pEmail = new JLabel("E-Mail or Username");
         pPassword = new JLabel("Password");
@@ -91,7 +92,7 @@ public class Password extends JDialog{
                         if (bruh == 0) {
                             System.out.println("bruh");
                         } else {
-                            System.out.println("success!");
+                            System.out.println("password successfuly updated!");
                         }
 
                     } catch (SQLException ex){
@@ -134,7 +135,7 @@ public class Password extends JDialog{
                         if (bruh == 0) {
                             System.out.println("bruh");
                         } else {
-                            System.out.println("success!");
+                            System.out.println("password successfuly inserted!");
                         }
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);

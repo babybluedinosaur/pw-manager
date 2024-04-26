@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class PWindow extends JDialog {
 
@@ -18,15 +19,21 @@ public class PWindow extends JDialog {
     private ResultSet result = null;
     private Connection connection;
     private int id;
+
+    LinkedList<Password> passwords;
     JSplitPane split;
 
     public PWindow(JFrame frame, int id, Connection connection) {
         init(frame, id, connection);
 
+        //read from db
+        refreshPasswords();
+
         //create list selection
         list.addListSelectionListener(e -> {
             String name = list.getSelectedValue();
             try {
+
                 //construct statement for query
                 String query = "SELECT * FROM user_data WHERE user_id = ? AND name = ?";
                 stmt = connection.prepareStatement(query);
@@ -67,6 +74,7 @@ public class PWindow extends JDialog {
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JPanel(), new JPanel());
         this.frame = frame;
         this.connection = connection;
+        this.passwords = new LinkedList<>();
         init_frame();
 
         //create left side
@@ -97,6 +105,27 @@ public class PWindow extends JDialog {
         this.frame.setForeground(new Color(41, 41,41));
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(450, 450);
+    }
+
+    public void refreshPasswords() {
+        try {
+            //prepare query
+            String query = "SELECT * FROM user_data WHERE user_id = ? ORDER BY name";
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+
+            //result
+            result = stmt.executeQuery();
+
+            while (result.next()) {
+                //create password instance and add to passwords
+            }
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
