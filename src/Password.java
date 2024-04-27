@@ -176,4 +176,7 @@ public class Password extends JDialog{
         pwPanel.add(tfExtra);
         pwPanel.add(savePassword);
     }
+    public String getTfName() {
+        return tfName.getText();
+    }
 }

@@ -119,9 +119,14 @@ public class PWindow extends JDialog {
 
             while (result.next()) {
                 //create password instance and add to passwords
+                passwords.add(new Password(result.getString("name"), result.getString("email"),
+                        result.getString("password"), result.getString("extra"),
+                        result.getInt("id"), result.getInt("user_id"), connection));
             }
 
-
+            for (Password pw : passwords) {
+                System.out.println(pw.getTfName());
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
