@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 public class PWindow extends JDialog {
@@ -19,8 +21,7 @@ public class PWindow extends JDialog {
     private ResultSet result = null;
     private Connection connection;
     private int id;
-
-    LinkedList<Password> passwords;
+    HashMap<String, Password> passwords;
     JSplitPane split;
 
     public PWindow(JFrame frame, int id, Connection connection) {
@@ -29,42 +30,20 @@ public class PWindow extends JDialog {
         //read from db
         refreshPasswords();
 
+        for (Password pw : passwords.values()) {
+            listModel.addElement(pw.getTfName());
+        }
+
         //create list selection
         list.addListSelectionListener(e -> {
             String name = list.getSelectedValue();
-            try {
-
-                //construct statement for query
-                String query = "SELECT * FROM user_data WHERE user_id = ? AND name = ?";
-                stmt = connection.prepareStatement(query);
-                stmt.setString(1, String.valueOf(id));
-                stmt.setString(2, name);
-
-                //result
-                result = stmt.executeQuery();
-
-                //fill out form and set right side
-
-
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            } finally {
-                if (connection != null) {
-
-                    try {
-
-                        connection.close();
-
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
+            split.setRightComponent(passwords.get(name).pwPanel);
         });
 
 
         //add Password
         this.frame.add(this.split, BorderLayout.CENTER);
+        this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
     }
 
@@ -74,7 +53,7 @@ public class PWindow extends JDialog {
         this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JPanel(), new JPanel());
         this.frame = frame;
         this.connection = connection;
-        this.passwords = new LinkedList<>();
+        this.passwords = new HashMap<>();
         init_frame();
 
         //create left side
@@ -92,6 +71,7 @@ public class PWindow extends JDialog {
             }
         });
         leftSide = new JScrollPane(arg); //inits left side with list and "add new pw"-Button
+        leftSide.setPreferredSize(new Dimension(200, getHeight()));
         split.setLeftComponent(leftSide);
 
         frame.add(split);
@@ -119,13 +99,10 @@ public class PWindow extends JDialog {
 
             while (result.next()) {
                 //create password instance and add to passwords
-                passwords.add(new Password(result.getString("name"), result.getString("email"),
+                passwords.put(result.getString("name"),
+                        new Password(result.getString("name"), result.getString("email"),
                         result.getString("password"), result.getString("extra"),
                         result.getInt("id"), result.getInt("user_id"), connection));
-            }
-
-            for (Password pw : passwords) {
-                System.out.println(pw.getTfName());
             }
 
         } catch (SQLException e) {

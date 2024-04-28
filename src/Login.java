@@ -152,6 +152,21 @@ public class Login extends JDialog{
         btnOK.setPreferredSize(new Dimension(80, 30));
     }
 
+    private void centerFrame() {
+        // Get the size of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Get the size of the frame
+        Dimension frameSize = getSize();
+
+        // Calculate the new location of the frame
+        int x = (screenSize.width - frameSize.width) / 2;
+        int y = (screenSize.height - frameSize.height) / 2;
+
+        // Set the location of the frame
+        setLocation(x, y);
+    }
+
 
 
     public static void main(String[] args) {
@@ -160,6 +175,7 @@ public class Login extends JDialog{
         frame.getContentPane().setForeground(new Color(41, 41,41));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(450, 450);
+        frame.setLocationRelativeTo(null);
         Login login = new Login(frame);
 
     }
