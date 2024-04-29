@@ -28,6 +28,7 @@ public class Password extends JDialog{
 
     private ResultSet result = null;
 
+    private DefaultListModel<String> listModel;
 
 
     //read password from db
@@ -45,34 +46,13 @@ public class Password extends JDialog{
         this.pw_id = pw_id;
         this.user_id = user_id;
         this.connection = connection;
+        this.listModel = listModel;
         if (name != null) tfName.setText(name);
         if (email != null) tfEmail.setText(email);
         if (password != null) tfPassword.setText(password);
         if (extra != null) tfExtra.setText(extra);
         setUI();
-    }
 
-    public void setUI() {
-        pwPanel = new JPanel();
-        pwPanel.setBackground(new Color(41, 41, 41));
-        pName.setBackground(new Color(160, 161, 165));
-        pName.setForeground(new Color(160, 161, 165));
-        pEmail.setBackground(new Color(160, 161, 165));
-        pEmail.setForeground(new Color(160, 161, 165));
-        pPassword.setBackground(new Color(160, 161, 165));
-        pPassword.setForeground(new Color(160, 161, 165));
-        pExtra.setBackground(new Color(160, 161, 165));
-        pExtra.setForeground(new Color(160, 161, 165));
-        tfName.setBackground(new Color(160, 161, 165));
-        tfName.setForeground(new Color(41, 41, 41));
-        tfEmail.setBackground(new Color(160, 161, 165));
-        tfEmail.setForeground(new Color(41, 41, 41));
-        tfPassword.setBackground(new Color(160, 161, 165));
-        tfPassword.setForeground(new Color(41, 41, 41));
-        tfExtra.setBackground(new Color(160, 161, 165));
-        tfExtra.setForeground(new Color(41, 41, 41));
-        savePassword.setBackground(new Color(41, 41, 41));
-        savePassword.setForeground(new Color(160, 161, 165));
         savePassword.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,10 +68,16 @@ public class Password extends JDialog{
                         stmt.setString(4, tfExtra.getText());
                         stmt.setInt(5, pw_id);
 
+
                         int bruh = stmt.executeUpdate();
                         if (bruh == 0) {
                             System.out.println("bruh");
                         } else {
+                            assert name != null;
+                            if (!name.equals(tfName.getText())) {
+                                //hier jetzt listmodel verändern
+                                //vielleicht auch passwords?
+                            }
                             System.out.println("password successfuly updated!");
                         }
 
@@ -175,8 +161,32 @@ public class Password extends JDialog{
         pwPanel.add(pExtra);
         pwPanel.add(tfExtra);
         pwPanel.add(savePassword);
+
+    }
+
+    public void setUI() {
+        pwPanel = new JPanel();
+        pwPanel.setBackground(new Color(41, 41, 41));
+        pName.setBackground(new Color(160, 161, 165));
+        pName.setForeground(new Color(160, 161, 165));
+        pEmail.setBackground(new Color(160, 161, 165));
+        pEmail.setForeground(new Color(160, 161, 165));
+        pPassword.setBackground(new Color(160, 161, 165));
+        pPassword.setForeground(new Color(160, 161, 165));
+        pExtra.setBackground(new Color(160, 161, 165));
+        pExtra.setForeground(new Color(160, 161, 165));
+        tfName.setBackground(new Color(160, 161, 165));
+        tfName.setForeground(new Color(41, 41, 41));
+        tfEmail.setBackground(new Color(160, 161, 165));
+        tfEmail.setForeground(new Color(41, 41, 41));
+        tfPassword.setBackground(new Color(160, 161, 165));
+        tfPassword.setForeground(new Color(41, 41, 41));
+        tfExtra.setBackground(new Color(160, 161, 165));
+        tfExtra.setForeground(new Color(41, 41, 41));
+        savePassword.setBackground(new Color(41, 41, 41));
+        savePassword.setForeground(new Color(160, 161, 165));
     }
     public String getTfName() {
-        return tfName.getText();
+        return this.tfName.getText();
     }
 }
