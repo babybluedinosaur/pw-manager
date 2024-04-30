@@ -37,6 +37,7 @@ public class PWindow extends JDialog {
         //create list selection
         list.addListSelectionListener(e -> {
             String name = list.getSelectedValue();
+            System.out.println(name);
             split.setRightComponent(passwords.get(name).pwPanel);
         });
 
@@ -66,7 +67,8 @@ public class PWindow extends JDialog {
         btnAddPw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Password newPw = new Password(null, null, null, null,-1, id, connection);
+                Password newPw = new Password(null, null, null, null,-1, id,
+                        connection, listModel, passwords);
                 split.setRightComponent(newPw.pwPanel);
             }
         });
@@ -102,7 +104,8 @@ public class PWindow extends JDialog {
                 passwords.put(result.getString("name"),
                         new Password(result.getString("name"), result.getString("email"),
                         result.getString("password"), result.getString("extra"),
-                        result.getInt("id"), result.getInt("user_id"), connection));
+                        result.getInt("id"), result.getInt("user_id"), connection, listModel,
+                                passwords));
             }
 
         } catch (SQLException e) {

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Password extends JDialog{
     public JPanel pwPanel; //window with password
@@ -30,10 +31,12 @@ public class Password extends JDialog{
 
     private DefaultListModel<String> listModel;
 
+    private HashMap<String, Password> passwords;
+
 
     //read password from db
     public Password(String name, String email, String password, String extra, int pw_id, int user_id,
-                    Connection connection) {
+                    Connection connection, DefaultListModel<String> listModel, HashMap<String, Password> passwords) {
         pName = new JLabel("Name");
         pEmail = new JLabel("E-Mail or Username");
         pPassword = new JLabel("Password");
@@ -47,6 +50,7 @@ public class Password extends JDialog{
         this.user_id = user_id;
         this.connection = connection;
         this.listModel = listModel;
+        this.passwords = passwords;
         if (name != null) tfName.setText(name);
         if (email != null) tfEmail.setText(email);
         if (password != null) tfPassword.setText(password);
@@ -76,7 +80,16 @@ public class Password extends JDialog{
                             assert name != null;
                             if (!name.equals(tfName.getText())) {
                                 //hier jetzt listmodel verändern
-                                //vielleicht auch passwords?
+                                listModel.removeElement(name);
+                                listModel.addElement(tfName.getText());
+
+                                //passwords
+                                System.out.println(passwords.keySet());
+                                passwords.remove(name);
+                                passwords.put(tfName.getText(), new Password(tfName.getText(), tfEmail.getText(),
+                                        tfPassword.getText(), tfExtra.getText(), pw_id, user_id, connection, listModel,
+                                        passwords));
+
                             }
                             System.out.println("password successfuly updated!");
                         }
