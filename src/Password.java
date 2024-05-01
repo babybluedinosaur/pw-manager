@@ -33,6 +33,8 @@ public class Password extends JDialog{
 
     private HashMap<String, Password> passwords;
 
+    String currentName;
+
 
     //read password from db
     public Password(String name, String email, String password, String extra, int pw_id, int user_id,
@@ -51,6 +53,7 @@ public class Password extends JDialog{
         this.connection = connection;
         this.listModel = listModel;
         this.passwords = passwords;
+        this.currentName = name;
         if (name != null) tfName.setText(name);
         if (email != null) tfEmail.setText(email);
         if (password != null) tfPassword.setText(password);
@@ -62,6 +65,7 @@ public class Password extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 //TODO
                 if (pw_id > 0) { //update
+                    System.out.println("test");
                     //first update
                     String query = "UPDATE user_data SET name=?, email=?, password=?, extra=? WHERE id=?";
                     try {
@@ -77,18 +81,18 @@ public class Password extends JDialog{
                         if (bruh == 0) {
                             System.out.println("bruh");
                         } else {
-                            assert name != null;
-                            if (!name.equals(tfName.getText())) {
+                            assert currentName != null;
+                            if (!currentName.equals(tfName.getText())) {
                                 //hier jetzt listmodel verändern
-                                listModel.removeElement(name);
+                                listModel.removeElement(currentName);
                                 listModel.addElement(tfName.getText());
 
                                 //passwords
-                                System.out.println(passwords.keySet());
-                                passwords.remove(name);
+                                passwords.remove(currentName);
                                 passwords.put(tfName.getText(), new Password(tfName.getText(), tfEmail.getText(),
                                         tfPassword.getText(), tfExtra.getText(), pw_id, user_id, connection, listModel,
                                         passwords));
+                                currentName = tfName.getText();
 
                             }
                             System.out.println("password successfuly updated!");
@@ -136,6 +140,15 @@ public class Password extends JDialog{
                         } else {
                             System.out.println("password successfuly inserted!");
                         }
+
+                        listModel.addElement(tfName.getText());
+
+                        //passwords
+                        passwords.remove(currentName);
+                        passwords.put(tfName.getText(), new Password(tfName.getText(), tfEmail.getText(),
+                                tfPassword.getText(), tfExtra.getText(), pw_id, user_id, connection, listModel,
+                                passwords));
+
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     } finally {

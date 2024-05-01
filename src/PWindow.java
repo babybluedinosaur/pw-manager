@@ -37,9 +37,11 @@ public class PWindow extends JDialog {
         //create list selection
         list.addListSelectionListener(e -> {
             String name = list.getSelectedValue();
-            System.out.println(name);
-            split.setRightComponent(passwords.get(name).pwPanel);
+            if (name != null) {
+                split.setRightComponent(passwords.get(name).pwPanel);
+            }
         });
+
 
 
         //add Password
