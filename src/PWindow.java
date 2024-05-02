@@ -16,7 +16,7 @@ public class PWindow extends JDialog {
     private JList<String> list;
     private DefaultListModel<String> listModel;
     private JButton btnAddPw;
-    private JScrollPane leftSide; //contains list of pw's
+    private JScrollPane leftSide;
     private PreparedStatement stmt = null;
     private ResultSet result = null;
     private Connection connection;
@@ -53,7 +53,9 @@ public class PWindow extends JDialog {
     public void init(JFrame frame, int id, Connection connection) {
         //general prep
         this.id = id;
-        this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JPanel(), new JPanel());
+        JPanel defaultRight = new JPanel();
+        defaultRight.setBackground(new Color(41, 41,41));
+        this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JPanel(), defaultRight);
         this.frame = frame;
         this.connection = connection;
         this.passwords = new HashMap<>();
@@ -77,6 +79,8 @@ public class PWindow extends JDialog {
         leftSide = new JScrollPane(arg); //inits left side with list and "add new pw"-Button
         leftSide.setPreferredSize(new Dimension(200, getHeight()));
         split.setLeftComponent(leftSide);
+        split.getLeftComponent().setMinimumSize(new Dimension(250, 100 ));
+        init_colors();
 
         frame.add(split);
     }
@@ -88,7 +92,14 @@ public class PWindow extends JDialog {
         this.frame.setBackground(new Color(41, 41,41));
         this.frame.setForeground(new Color(41, 41,41));
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(450, 450);
+        this.frame.setSize(550, 450);
+    }
+
+    public void init_colors() {
+        this.list.setBackground(new Color(41, 41,41));
+        this.list.setForeground(new Color(160, 161, 165));
+        this.btnAddPw.setBackground(new Color(41, 41,41));
+        this.btnAddPw.setForeground(new Color(160, 161, 165));
     }
 
     public void refreshPasswords() {
